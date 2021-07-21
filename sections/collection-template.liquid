@@ -233,7 +233,12 @@
 
 {% endpaginate %}
 
-
+{% for block in section.blocks %}
+  {% case block.type %}
+    {% when '@app' %}
+      {% render block %}
+  {% endcase %}
+{% endfor %}
 
 {% schema %}
 {
@@ -516,6 +521,11 @@
         "zh-TW": "啟用標籤篩選功能"
       },
       "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
     }
   ]
 }
