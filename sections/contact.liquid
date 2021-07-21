@@ -47,8 +47,15 @@
             </div>
           </div>
 
-          <label for="{{ formId }}-phone">{{ 'contact.form.phone' | t }}</label>
-          <input type="tel" id="{{ formId }}-phone" name="contact[{{ 'contact.form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form[phone] %}{{ form[phone] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'form_input' %}
+                <div {{ block.shopify_attributes }}>
+                  <label for="{{ formId }}-{{ block.settings.input_label }}">{{ block.settings.input_label }}</label>
+                  <input type="{{ block.settings.input_type }}" id="{{ formId }}-{{ block.settings.input_label }}" name="{{ block.settings.input_label }}" value="">
+                </div>
+            {% endcase %}
+          {% endfor %}
 
           <label for="{{ formId }}-message">{{ 'contact.form.message' | t }}</label>
           <textarea rows="10" id="{{ formId }}-message" name="contact[{{ 'contact.form.message' | t }}]">{% if form.body %}{{ form.body }}{% endif %}</textarea>
@@ -60,3 +67,55 @@
     </div>
   </div>
 </div>
+
+{% for block in section.blocks %}
+  {% case block.type %}
+    {% when '@app' %}
+      {% render block %}
+  {% endcase %}
+{% endfor %}
+
+{% schema %}
+{
+  "name": "t:sections.contact.name",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "require_phone_number",
+      "label": "t:sections.contact.require_phone_number"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "form_input",
+      "name": "t:sections.contact.blocks.form_input.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "input_label",
+          "label": "t:sections.contact.blocks.form_input.settings.input_label"
+        },
+        {
+          "type": "select",
+          "id": "input_type",
+          "label": "t:sections.contact.blocks.form_input.settings.input_type",
+          "options": [
+            {
+              "value": "date",
+              "label": "Date"
+            },
+            {
+              "value": "text",
+              "label": "Text"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

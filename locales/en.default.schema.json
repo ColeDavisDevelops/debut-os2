@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "contact": {
+      "name": "Contact",
+      "require_phone_number": "Require phone number",
+      "blocks": {
+        "form_input": {
+          "name": "Form input",
+          "settings": {
+            "input_label": "Input label",
+            "input_type": "Input type"
+          }
+        }
+      }
+    }
+  }
+}
